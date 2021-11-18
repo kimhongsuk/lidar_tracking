@@ -105,10 +105,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES lidar_tracking
-#  CATKIN_DEPENDS geometry_msgs message_generation roscpp rospy std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include src
+  LIBRARIES ${PROJECT_NAME}_lib
+  CATKIN_DEPENDS geometry_msgs message_generation roscpp rospy std_msgs
+  DEPENDS system_lib
 )
 
 ###########
@@ -118,7 +118,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
+  src
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -206,3 +207,23 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+set(PROJECT_LIB_FILES
+# Preprocessing
+  src/unit_conversion.cpp
+  src/unit_conversion_data.cpp
+  src/unit_conversion_initialize.cpp
+  src/unitconversion_terminate.cpp
+# Tracking
+  src/fusion_object.cpp
+  src/prediction.cpp
+  src/correction.cpp
+  src/fusion_track_management.cpp
+# else
+  src/mpower.cpp
+  src/mtimes.cpp
+  src/rtGetInf.cpp
+  src/rtGetNaN.cpp
+  src/rt_nonfinite.cpp
+)
+
