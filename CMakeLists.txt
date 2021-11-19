@@ -9,7 +9,6 @@ project(lidar_tracking)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
-  message_generation
   roscpp
   rospy
   std_msgs
@@ -105,9 +104,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include src
+  INCLUDE_DIRS include src data
   LIBRARIES ${PROJECT_NAME}_lib
-  CATKIN_DEPENDS geometry_msgs message_generation roscpp rospy std_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
   DEPENDS system_lib
 )
 
@@ -120,6 +119,7 @@ catkin_package(
 include_directories(
   include
   src
+  node
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -136,7 +136,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/lidar_tracking_node.cpp)
+add_executable(${PROJECT_NAME}_node node/lidar_tracking_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
