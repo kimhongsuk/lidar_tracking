@@ -104,10 +104,19 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include src data
-  LIBRARIES ${PROJECT_NAME}_lib
-  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
-  DEPENDS system_lib
+  INCLUDE_DIRS 
+    include
+    src
+    data
+  LIBRARIES
+    ${PROJECT_NAME}_lib
+  CATKIN_DEPENDS
+    geometry_msgs
+    roscpp
+    rospy
+    std_msgs
+  DEPENDS
+    system_lib
 )
 
 ###########
@@ -123,10 +132,29 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+set(PROJECT_LIB_FILES
+# Preprocessing
+  src/unit_conversion.cpp
+  src/unit_conversion_data.cpp
+  src/unit_conversion_initialize.cpp
+  src/unit_conversion_terminate.cpp
+# Tracking
+  src/fusion_object.cpp
+  src/prediction.cpp
+  src/correction.cpp
+  src/fusion_track_management.cpp
+# else
+  src/mpower.cpp
+  src/mtimes.cpp
+  src/rtGetInf.cpp
+  src/rtGetNaN.cpp
+  src/rt_nonfinite.cpp
+)
+
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/lidar_tracking.cpp
-# )
+add_library(${PROJECT_NAME}_lib
+  ${PROJECT_LIB_FILES}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -136,7 +164,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node node/lidar_tracking_node.cpp)
+add_executable(${PROJECT_NAME} node/lidar_tracking_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -149,9 +177,7 @@ add_executable(${PROJECT_NAME}_node node/lidar_tracking_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+
 
 #############
 ## Install ##
@@ -202,28 +228,12 @@ add_executable(${PROJECT_NAME}_node node/lidar_tracking_node.cpp)
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_lidar_tracking.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_lib ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
+
+#add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-set(PROJECT_LIB_FILES
-# Preprocessing
-  src/unit_conversion.cpp
-  src/unit_conversion_data.cpp
-  src/unit_conversion_initialize.cpp
-  src/unitconversion_terminate.cpp
-# Tracking
-  src/fusion_object.cpp
-  src/prediction.cpp
-  src/correction.cpp
-  src/fusion_track_management.cpp
-# else
-  src/mpower.cpp
-  src/mtimes.cpp
-  src/rtGetInf.cpp
-  src/rtGetNaN.cpp
-  src/rt_nonfinite.cpp
-)
 

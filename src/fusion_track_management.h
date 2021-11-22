@@ -5,7 +5,7 @@
 // File: fusion_track_management.h
 //
 // MATLAB Coder version            : 5.2
-// C/C++ source code generated on  : 18-Nov-2021 11:27:25
+// C/C++ source code generated on  : 22-Nov-2021 19:24:05
 //
 
 #ifndef FUSION_TRACK_MANAGEMENT_H
@@ -21,12 +21,13 @@
 // Function Declarations
 extern void fusion_track_management(
     const double Fusion_Object[352], const double Fusion_Track_Updated[768],
-    const double P_Fusion_Track_Updated[1152], float Association_Map_Updated,
-    float Association_Map_k_1, const struct17_T *TRACKING,
+    const double P_Fusion_Track_Updated[1152],
+    const double Association_Map_Updated[32],
+    const double Association_Map_k_1[32], const struct17_T *TRACKING,
     const struct9_T *DEFINITION, double LIDAR_TRACK_SWITCH,
     const struct10_T *FUSION_TRACK, const struct27_T *ASSOCIATION,
     double FRONT_VISION_TRACK_SWITCH,
-    coder::array<double, 2U> &Fusion_Track_out, float *Association_Map_out,
+    coder::array<double, 2U> &Fusion_Track_out, double Association_Map_out[32],
     coder::array<double, 3U> &P_Fusion_Track_out);
 
 #endif

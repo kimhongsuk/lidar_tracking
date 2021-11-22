@@ -55,7 +55,7 @@ void unit_conversion(const double Lidar_Detection[256],
   //  9  : Preprocessng Relative Position X
   //  10 : Preprocessing Relative Position Y
   // --------------------------------------------------------------------------
-  //  initialization
+  ////  initialization
   // --------------------------------------------------------------------------
   Lidar_Detection_out.set_size(static_cast<int>(LIDAR_DETECTION->STATE_NUMBER),
                                static_cast<int>(LIDAR_DETECTION->TRACK_NUMBER));

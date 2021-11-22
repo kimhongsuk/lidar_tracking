@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <cstdio>
 #include <iostream>
+#include <algorithm>
 #include <time.h>
 
 #include "coder_array.h"
@@ -41,25 +42,103 @@ struct struct10_T *FUSION_TRACK_ptr;
 struct struct17_T *TRACKING_ptr;
 struct struct27_T *ASSOCIATION_ptr;
 
+double SAMPLE_TIME;
+double LIDAR_TRACK_SWITCH;
+double FRONT_VISION_TRACK_SWITCH;
+
 
 void paramInit();
 
 void inputInit(FILE *file, double *lidar_detection);
+void saveFile(FILE *file, double *Fusion_Track);
+void saveFile_tmp(FILE *file, double *Fusion_Track, int rows);
+
+void coder2vanilla_2U(coder::array<double, 2U> coder, double *vanilla, int size);
+void coder2vanilla_3U(coder::array<double, 3U> coder, double *vanilla, int size);
 
 int main(int argc, char** argv) {
 	paramInit();
 	
-	double Lidar_Detection[256];
+	double Lidar_Detection_init[256];
+	double Lidar_Detection[320];
+	double Fusion_Object[352];
+	double Association_Map[32];
+	double Fusion_Track[768];
+	double P_Fusion_Track[1152];
+	double Fusion_Track_Predicted[768];
+	double P_Fusion_Track_Predicted[1152];
+	double Fusion_Track_Updated[768];
+	double P_Fusion_Track_Updated[1152];
+	double Association_Map_Updated[32];
 
+	coder::array<double, 2U> Lidar_Detection_out;
+	coder::array<double, 2U> Fusion_Object_out;
+	coder::array<double, 2U> Fusion_Track_out;
+	coder::array<double, 3U> P_Fusion_Track_out;
+	coder::array<double, 2U> Fusion_Track_Predicted_out;
+	coder::array<double, 3U> P_Fusion_Track_Predicted_out;
+	coder::array<double, 3U> P_Fusion_Track_Updated_out;
+	coder::array<double, 2U> Association_Map_Updated_out;
+	coder::array<double, 3U> S_CA;
+	coder::array<double, 2U> Md_FV;
+
+	double Association_Map_k_1[32];
+	double Fusion_Track_k_1[768];
+	double P_Fusion_Track_k_1[1152];
+
+	std::fill_n(Association_Map_k_1, 32, 0);
+	std::fill_n(Fusion_Track_k_1, 768, 0);
+	std::fill_n(P_Fusion_Track_k_1, 1152, 0);
+
+	// txt input file init
 	FILE* input_file = NULL;
-	input_file = fopen("/home/avees/catkin_ws/src/lidar_tracking/data/input_test.txt", "r");
-	if (input_file == NULL) {
-		return -1;
-	}
+	FILE* output_file = NULL;
+	input_file = fopen("/home/avees/catkin_ws/src/lidar_tracking/data/input.txt", "r");
+	output_file = fopen("/home/avees/catkin_ws/src/lidar_tracking/data/output_test.txt", "w");
 	
-	inputInit(input_file, Lidar_Detection);
+	while (feof(input_file) == 0) {
+		inputInit(input_file, Lidar_Detection_init);
+
+		// lidar_tracking functions
+		unit_conversion(Lidar_Detection_init, LIDAR_DETECTION_ptr, UNIT_CONVERSION_ptr, DEFINITION_ptr, Lidar_Detection_out);
+	
+		coder2vanilla_2U(Lidar_Detection_out, Lidar_Detection, 320);
+		fusion_object(Lidar_Detection, FUSION_TRACK_ptr, LIDAR_DETECTION_ptr, Fusion_Object_out);
+
+		prediction(Association_Map_k_1, Fusion_Track_k_1, P_Fusion_Track_k_1, SAMPLE_TIME, FUSION_TRACK_ptr, TRACKING_ptr, Fusion_Track_Predicted_out, P_Fusion_Track_Predicted_out);
+
+		coder2vanilla_2U(Fusion_Object_out, Fusion_Object, 352);
+		coder2vanilla_2U(Fusion_Track_Predicted_out, Fusion_Track_Predicted, 768);
+		coder2vanilla_3U(P_Fusion_Track_Predicted_out, P_Fusion_Track_Predicted, 1152);
+		correction(Fusion_Object, Association_Map_k_1, Fusion_Track_Predicted, P_Fusion_Track_Predicted, FUSION_TRACK_ptr, TRACKING_ptr, ASSOCIATION_ptr, Fusion_Track_Updated, P_Fusion_Track_Updated_out, Association_Map_Updated_out, S_CA, Md_FV);
+
+		coder2vanilla_3U(P_Fusion_Track_Updated_out, P_Fusion_Track_Updated, 768);
+		coder2vanilla_2U(Association_Map_Updated_out, Association_Map_Updated, 32);
+		fusion_track_management(Fusion_Object, Fusion_Track_Updated, P_Fusion_Track_Updated, Association_Map_Updated, Association_Map_k_1, TRACKING_ptr, DEFINITION_ptr, LIDAR_TRACK_SWITCH, FUSION_TRACK_ptr, ASSOCIATION_ptr, FRONT_VISION_TRACK_SWITCH, Fusion_Track_out, Association_Map, P_Fusion_Track_out);
+
+		coder2vanilla_2U(Fusion_Track_out, Fusion_Track, 768);
+		coder2vanilla_3U(P_Fusion_Track_out, P_Fusion_Track, 1152);
+		std::copy(Association_Map, Association_Map + 32, Association_Map_k_1);
+		std::copy(Fusion_Track, Fusion_Track + 768, Fusion_Track_k_1);
+		std::copy(P_Fusion_Track, P_Fusion_Track + 1152, P_Fusion_Track_k_1);
+
+		saveFile(output_file, Fusion_Track);
+	}
+
+	fclose(output_file);
+	fclose(input_file);
 
 	return 0;
+}
+
+void saveFile_tmp(FILE *file, double *Fusion_Track, int rows) {
+	for (int output_rows = 0; output_rows < rows; output_rows++) {
+		for (int output_cols = 0; output_cols < 32; output_cols++) {
+			fprintf(file, "%lf,", Fusion_Track[output_rows + (output_cols * rows)]);
+			fflush(file);
+		}
+		fprintf(file, "\n");
+	}
 }
 
 void inputInit(FILE *file, double *lidar_detection) {
@@ -73,7 +152,33 @@ void inputInit(FILE *file, double *lidar_detection) {
 	}
 }
 
+void saveFile(FILE *file, double *Fusion_Track) {
+	for (int output_rows = 0; output_rows < 24; output_rows++) {
+		for (int output_cols = 0; output_cols < 32; output_cols++) {
+			fprintf(file, "%lf,", Fusion_Track[output_rows + (output_cols * 24)]);
+			fflush(file);
+		}
+		fprintf(file, "\n");
+	}
+}
+
+void coder2vanilla_2U(coder::array<double, 2U> coder, double *vanilla, int size) {
+	for (int index = 0; index < size; index++) {
+		vanilla[index] = coder[index];
+	}
+}
+
+void coder2vanilla_3U(coder::array<double, 3U> coder, double *vanilla, int size) {
+	for (int index = 0; index < size; index++) {
+		vanilla[index] = coder[index];
+	}
+}
+
 void paramInit() {
+	SAMPLE_TIME = 0.0500;
+	LIDAR_TRACK_SWITCH = 1;
+	FRONT_VISION_TRACK_SWITCH = 0;
+
 	LIDAR_DETECTION_ptr = &LIDAR_DETECTION;
 	UNIT_CONVERSION_ptr = &UNIT_CONVERSION;
 	DEFINITION_ptr = &DEFINITION;
@@ -91,6 +196,10 @@ void paramInit() {
 	LIDAR_DETECTION_ptr->MEASURE.SCORE = 8;
 	LIDAR_DETECTION_ptr->MEASURE.STATE_NUMBER = 8;
 	LIDAR_DETECTION_ptr->MEASURE.ID_EXIST = 0;
+
+	LIDAR_DETECTION_ptr->TRACKING.REL_POS_X = 9;
+	LIDAR_DETECTION_ptr->TRACKING.REL_POS_Y = 10;
+	LIDAR_DETECTION_ptr->TRACKING.STATE_NUMBER = 2;
 
 	LIDAR_DETECTION_ptr->TRACK_NUMBER = 32;
 
