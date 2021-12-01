@@ -5,7 +5,7 @@
 // File: unit_conversion.cpp
 //
 // MATLAB Coder version            : 5.2
-// C/C++ source code generated on  : 18-Nov-2021 11:27:25
+// C/C++ source code generated on  : 30-Nov-2021 15:28:02
 //
 
 // Include Files
@@ -55,7 +55,7 @@ void unit_conversion(const double Lidar_Detection[256],
   //  9  : Preprocessng Relative Position X
   //  10 : Preprocessing Relative Position Y
   // --------------------------------------------------------------------------
-  ////  initialization
+  //  initialization
   // --------------------------------------------------------------------------
   Lidar_Detection_out.set_size(static_cast<int>(LIDAR_DETECTION->STATE_NUMBER),
                                static_cast<int>(LIDAR_DETECTION->TRACK_NUMBER));

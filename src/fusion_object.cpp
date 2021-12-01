@@ -5,7 +5,7 @@
 // File: fusion_object.cpp
 //
 // MATLAB Coder version            : 5.2
-// C/C++ source code generated on  : 18-Nov-2021 11:27:25
+// C/C++ source code generated on  : 30-Nov-2021 15:28:02
 //
 
 // Include Files
@@ -174,6 +174,9 @@ void fusion_object(const double Lidar_Detection[320],
               Lidar_Detection[(static_cast<int>(LIDAR_DETECTION->MEASURE.YAW) +
                                10 * index_FST) -
                               1];
+          Fusion_Object[(static_cast<int>(FUSION_TRACK->MEASURE.CLASS) +
+                         Fusion_Object.size(0) * index_FST) -
+                        1] = 1.0;
           a_tmp =
               Fusion_Object[(static_cast<int>(FUSION_TRACK->MEASURE.REL_POS_X) +
                              Fusion_Object.size(0) * index_FST) -

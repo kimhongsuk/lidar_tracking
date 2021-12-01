@@ -5,7 +5,7 @@
 // File: unit_conversion_types.h
 //
 // MATLAB Coder version            : 5.2
-// C/C++ source code generated on  : 18-Nov-2021 11:27:25
+// C/C++ source code generated on  : 30-Nov-2021 15:28:02
 //
 
 #ifndef UNIT_CONVERSION_TYPES_H
@@ -89,12 +89,12 @@ struct struct8_T {
 };
 
 struct struct3_T {
+  double SWITCH;
   struct4_T IN_VEHICLE_SENSOR;
   struct5_T LIDAR;
   struct6_T LIDAR_DETECTION;
   struct7_T FRONT_VISION;
   struct8_T GT_TRACK;
-  double SWITCH;
 };
 
 struct struct9_T {
@@ -111,6 +111,7 @@ struct struct11_T {
   double LENGTH;
   double HEIGHT;
   double HEADING_ANGLE;
+  double CLASS;
   double RANGE;
   double ANGLE;
 };

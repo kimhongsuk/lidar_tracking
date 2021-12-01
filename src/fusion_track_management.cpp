@@ -5,7 +5,7 @@
 // File: fusion_track_management.cpp
 //
 // MATLAB Coder version            : 5.2
-// C/C++ source code generated on  : 22-Nov-2021 19:24:05
+// C/C++ source code generated on  : 30-Nov-2021 15:28:02
 //
 
 // Include Files
@@ -40,7 +40,7 @@ void fusion_track_management(
     const double Association_Map_Updated[32],
     const double Association_Map_k_1[32], const struct17_T *TRACKING,
     const struct9_T *DEFINITION, double LIDAR_TRACK_SWITCH,
-    const struct10_T *FUSION_TRACK, const struct27_T *ASSOCIATION,
+    const struct10_T *FUSION_TRACK, const struct27_T *,
     double FRONT_VISION_TRACK_SWITCH,
     coder::array<double, 2U> &Fusion_Track_out, double Association_Map_out[32],
     coder::array<double, 3U> &P_Fusion_Track_out)
@@ -61,7 +61,7 @@ void fusion_track_management(
   int loop_ub;
   bool exitg1;
   // --------------------------------------------------------------------------
-  //  Fusion_Track_Updated : [21 X 32]     Input
+  //  Fusion_Track_Updated : [24 X 32]     Input
   // --------------------------------------------------------------------------
   //  1  : Relative position Y
   //  2  : Relative position X
@@ -71,19 +71,22 @@ void fusion_track_management(
   //  6  : Length
   //  7  : Height
   //  8  : Heading angle
-  //  9  : Range
-  //  10 : Angle
-  //  11 : Fused Lidar Track ID
-  //  12 : (Tracking) Relative position Y
-  //  13 : (Tracking) Relative position X
-  //  14 : (Tracking) Relative velocity Y
-  //  15 : (Tracking) Relative velocity X
-  //  16 : Updated Age
-  //  17 : Coasting Age
-  //  18 : Life time
-  //  19 : Relative normal position with respect to lane
-  //  20 : Relative tangential velocity with respect to lane
-  //  21 : Relative normal velocity with respect to lane
+  //  9  : Class
+  //  10  : Range
+  //  11 : Angle
+  //  12 : Fused Lidar Track ID
+  //  13 : (Tracking) Relative position Y
+  //  14 : (Tracking) Relative position X
+  //  15 : (Tracking) Relative velocity Y
+  //  16 : (Tracking) Relative velocity X
+  //  17 : Updated Age
+  //  18 : Coasting Age
+  //  19 : Life time
+  //  20 : Relative normal position
+  //  21 : Relative tangential velocity with respect to lane
+  //  22 : Relative normal velocity with respect to lane
+  //  23 : (Tracking) Relative acceleration Y
+  //  24 : (Tracking) Relative acceleration X
   // --------------------------------------------------------------------------
   //  P_Fusion_Track_Updated : [4 X 4 X 32]  Input
   // --------------------------------------------------------------------------
@@ -96,7 +99,7 @@ void fusion_track_management(
   // --------------------------------------------------------------------------
   //  1  : Lidar Track
   // --------------------------------------------------------------------------
-  //  Fusion_Track_out : [21 X 32]     Output
+  //  Fusion_Track_out : [24 X 32]     Output
   // --------------------------------------------------------------------------
   //  1  : Relative position Y
   //  2  : Relative position X
@@ -106,19 +109,22 @@ void fusion_track_management(
   //  6  : Length
   //  7  : Height
   //  8  : Heading angle
-  //  9  : Range
-  //  10 : Angle
-  //  11 : Fused Lidar Track ID
-  //  12 : (Tracking) Relative position Y
-  //  13 : (Tracking) Relative position X
-  //  14 : (Tracking) Relative velocity Y
-  //  15 : (Tracking) Relative velocity X
-  //  16 : Updated Age
-  //  17 : Coasting Age
-  //  18 : Life time
-  //  19 : Relative normal position with respect to lane
-  //  20 : Relative tangential velocity with respect to lane
-  //  21 : Relative normal velocity with respect to lane
+  //  9  : Class
+  //  10  : Range
+  //  11 : Angle
+  //  12 : Fused Lidar Track ID
+  //  13 : (Tracking) Relative position Y
+  //  14 : (Tracking) Relative position X
+  //  15 : (Tracking) Relative velocity Y
+  //  16 : (Tracking) Relative velocity X
+  //  17 : Updated Age
+  //  18 : Coasting Age
+  //  19 : Life time
+  //  20 : Relative normal position
+  //  21 : Relative tangential velocity with respect to lane
+  //  22 : Relative normal velocity with respect to lane
+  //  23 : (Tracking) Relative acceleration Y
+  //  24 : (Tracking) Relative acceleration X
   // --------------------------------------------------------------------------
   //  Association_Map_out : [32 X 1]     Output
   // --------------------------------------------------------------------------
