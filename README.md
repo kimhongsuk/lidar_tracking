@@ -1,9 +1,13 @@
 # lidar_tracking
 
-If you don't have ros' catkin_ws, Please follow this page : [http://wiki.ros.org/ko/catkin/Tutorials/create_a_workspace](http://wiki.ros.org/ko/catkin/Tutorials/create_a_workspace)
+### 1\. Set Environment
 
+If you don't have ros' catkin_ws, Please follow this page : [http://wiki.ros.org/ko/catkin/Tutorials/create_a_workspace](http://wiki.ros.org/ko/catkin/Tutorials/create_a_workspace)
+<br/><br/>
+
+### 2\. Run Package
 #### First terminal
-```
+
 $ roscore
 ```
 
