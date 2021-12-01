@@ -168,7 +168,7 @@ add_library(${PROJECT_NAME}_lib
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} node/lidar_tracking_node.cpp)
+add_executable(${PROJECT_NAME}_node node/lidar_tracking_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -233,7 +233,7 @@ add_executable(${PROJECT_NAME} node/lidar_tracking_node.cpp)
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_lidar_tracking.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 target_link_libraries(${PROJECT_NAME}_lib ${catkin_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME}_lib)
 
 #add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 # endif()

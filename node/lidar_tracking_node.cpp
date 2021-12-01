@@ -1,8 +1,8 @@
-#include <ros/ros.h>
+#include "ros/ros.h"
 #include "lidar_tracking/Tracking.h"
 #include "lidar_tracking/TrackingArray.h"
-#include <autoware_msgs/DetectedObject.h>
-#include <autoware_msgs/DetectedObjectArray.h>
+#include "autoware_msgs/DetectedObject.h"
+#include "autoware_msgs/DetectedObjectArray.h"
 #include <std_msgs/Header.h>
 #include <stdio.h>
 #include <cstdio>
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 
 	ros::spin();
 
-	cout << "[Lidar_Tracking}: End test" << endl;
+	cout << "[Lidar_Tracking]: End node" << endl;
 
 	return 0;
 }
