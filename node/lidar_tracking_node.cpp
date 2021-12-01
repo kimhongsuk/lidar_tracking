@@ -80,6 +80,9 @@ double P_Fusion_Track_k_1[1152];
 
 std_msgs::Header header;
 
+ros::Publisher pub_tracking; 
+ros::Subscriber sub_object;
+
 
 void callback(const autoware_msgs::DetectedObjectArray::ConstPtr& input);
 lidar_tracking::TrackingArray result2msg();
@@ -101,10 +104,8 @@ int main(int argc, char** argv) {
 	ros::init(argc, argv, "lidar_tracking_node");
 	ros::NodeHandle nh("");
 
-	ros::Publisher pub_tracking = nh.advertise<lidar_tracking::TrackingArray>("/tracking_msg", 1);
-	ros::Subscriber sub_object = nh.subscribe("/detection/lidar_objects_test", 1, callback);
-
-	pub_tracking.publish(result2msg());
+	pub_tracking = nh.advertise<lidar_tracking::TrackingArray>("/tracking_msg", 1);
+	sub_object = nh.subscribe("/detection/lidar_objects_test", 1, callback);
 
 	ros::spin();
 
@@ -121,6 +122,8 @@ void callback(const autoware_msgs::DetectedObjectArray::ConstPtr& input) {
 	header = input->header;
 
 	lidar_tracking_process();
+
+	pub_tracking.publish(result2msg());
 }
 
 lidar_tracking::TrackingArray result2msg() {
